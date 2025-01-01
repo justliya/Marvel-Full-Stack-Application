@@ -3,18 +3,26 @@ import { Link } from 'react-router-dom';
 
 function NavBar() {
     return (
-        <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
-            <Container>
-                <Navbar.Brand as={Link} to="/" className="fs-3 fw-bold">
+        <Navbar expand="lg" sticky="top" className="navbar shadow-sm py-3">
+            <Container fluid className="justify-content-center">
+                <Navbar.Brand as={Link} to="/" className="fs-3 text-white fw-bold">
                     Marvel Studio
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbar-nav" />
-                <Navbar.Collapse id="navbar-nav">
-                    <Nav className="ms-auto">
-                        <Nav.Link as={Link} to="/" className="fs-5">Home</Nav.Link>
-                        <Nav.Link as={Link} to="/character" className="fs-5">Character</Nav.Link>
-                        <Nav.Link as={Link} to="/createcharacter" className="fs-5">Create</Nav.Link>
-                        <Nav.Link as={Link} to="/collection" className="fs-5">Collection</Nav.Link>
+                <Navbar.Collapse id="navbar-nav" className="justify-content-center">
+                    <Nav className="gap-4">
+                        <Nav.Link as={Link} to="/" className="nav-link fs-4">
+                            Home
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="/character" className="nav-link fs-4">
+                            Character
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="/createcharacter" className="nav-link fs-4">
+                            Create
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="/marvelcharacters" className="nav-link fs-4">
+                            Marvel Characters
+                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

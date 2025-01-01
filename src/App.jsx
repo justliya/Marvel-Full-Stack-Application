@@ -3,7 +3,9 @@ import NavBar from './components/NavBar';
 import HomePage from './components/HomePage';
 import Character from './components/Character';
 import CreateCharacter from './components/CreateCharacter';
-import Collection from './components/Collection';
+import MarvelCharacters from './components/MarvelCharacters';
+import CollectionPage from './components/CollectionPage';
+import NotFound from './components/NotFound';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -17,7 +19,9 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/character" element={<Character />} />
               <Route path="/createcharacter" element={<CreateCharacter />} />
-              <Route path="/collection" element={<Collection />} />
+              <Route path="/marvelcharacters" element={<MarvelCharacters />} />
+              <Route path="/collection/:name" element={<CollectionPage />} />
+              <Route path="*" element={<NotFound />} />
       </Routes>
     </>
       

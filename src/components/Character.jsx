@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Container, Form, InputGroup, Button, Spinner, Card, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 function Character() {
@@ -40,97 +41,84 @@ function Character() {
     };
 
     return (
-        <div style={{ 
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '20px',
-            fontFamily: 'Inter, sans-serif',
-            textAlign: 'center'
-        }}>
-            <h1>Marvel Studio Character</h1>
-            <p>Please type in the box what character card you would like to see:</p>
-
+        <Container fluid className="home-container text-white d-flex flex-column justify-content-center align-items-center">
+               {/* Title */}
+               <Row className="text-center mb-6">
+                <Col>
+                    <h1 className="display-1 fw-bold fade-in">Marvel Studio Character</h1>
+                    <p className="fs-2 mt-3 fade-in">Please type in the box what character card you would like to see *don&apos;t forget any spaces or (-):</p>
+                </Col>
+            </Row>
+        
             {/* Search Bar */}
-            <form 
-                id="characterForm"
-                onSubmit={handleSubmit}
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: '20px',
-                }}
-            >
-                <input
-                    type="text"
-                    id="character"
-                    name="character"
-                    value={input}
-                    onChange={handleChange}
-                    required
-                    placeholder="Name of a Marvel Character"
-                    style={{
-                        padding: '10px',
-                        borderRadius: '20px 0 0 20px',
-                        border: '1px solid #ccc',
-                        outline: 'none',
-                        width: '250px',
-                        fontSize: '16px',
-                    }}
-                />
-                <button
-                    type="submit"
-                    className="btn"
-                    style={{
-                        padding: '10px 15px',
-                        borderRadius: '0 20px 20px 0',
-                        backgroundColor: '#6c63ff',
-                        color: 'white',
-                        border: 'none',
-                        fontSize: '16px',
-                    }}
-                >
-                    🔍
-                </button>
-            </form>
+            
+            <Form onSubmit={handleSubmit} className="justify-content-center w-100" style={{ maxWidth: '400px' }}>
+                <InputGroup>
+                    <Form.Control
+                        type="text"
+                        placeholder="Name of a Marvel Character"
+                        value={input}
+                        onChange={handleChange}
+                        required
+                    />
+                    <Button type="submit" variant="primary">
+                        🔍
+                    </Button>
+                </InputGroup>
+            </Form>
+           
+            {/* Loading Spinner */}
+            {isLoading && <Spinner animation="border" variant="info" />}
+
+            {/* Error Message */}
+            {characterError && <p className="text-danger mt-3">{characterError}</p>}
 
             {/* Character Display */}
-            <div id="characterInfo">
-                {isLoading && <p>Loading...</p>}
-                {characterError && <p style={{ color: "red" }}>{characterError}</p>}
-                {!isLoading && !characterError && character && (
-                    <div
-                        style={{
-                            width: '300px',
-                            borderRadius: '10px',
-                            overflow: 'hidden',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                            backgroundColor: 'white',
-                            color: 'black',
-                        }}
-                    >
-                        <img
-                            src={character.image_url || 'https://via.placeholder.com/300'}
-                            alt={character.name}
-                            style={{
-                                width: '100%',
-                                height: '300px', // Adjust height dynamically
-                                objectFit: 'cover',
-                            }}
-                        />
-                        <div style={{ padding: '15px' }}>
-                            <h5 style={{ fontWeight: 'bold' }}>{character.name}</h5>
-                            <p><strong>Alias:</strong> {character.alias}</p>
-                            <p><strong>Alignment:</strong> {character.alignment}</p>
-                            <p><strong>Powers:</strong> {character.powers}</p>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
+            {!isLoading && !characterError && character && (
+             <Container 
+             fluid 
+             className="character-container text-light d-flex flex-column justify-content-center align-items-center py-0.5"
+         >
+             {/* Character Display */}
+             <Row className="justify-content-center w-100">
+                 <Col xs={12} md={6} lg={4}>
+                     <Card className="character-card shadow-lg text-center fade-in" 
+                           style={{ borderRadius: '15px', backgroundColor: 'white' }}>
+                         
+                         {/* Character Image */}
+                         <Card.Img 
+                             variant="top"
+                             src={character?.image_url || 'https://via.placeholder.com/300'}
+                             alt={character?.name || 'Character'}
+                             className="character-img mx-auto d-block"
+                             style={{ height: '400px', objectFit: 'cover', borderTopLeftRadius: '15px', borderTopRightRadius: '15px' }}
+                         />
+         
+                         {/* Card Body */}
+                         <Card.Body className="p-4">
+                             <Card.Title className="fw-bold text-dark fs-4 mb-3">
+                                 {character?.name || 'Character'}
+                             </Card.Title>
+                             <Card.Subtitle className="text-muted mb-3 fs-6">
+                                 <strong>Alias:</strong> {character?.alias || 'Unknown'}
+                             </Card.Subtitle>
+                             <Card.Text className="mb-2 fs-6">
+                                 <strong className="text-primary">Alignment:</strong> {character?.alignment || 'Unknown'}
+                             </Card.Text>
+                             <Card.Text className="fs-6">
+                                 <strong className="text-success">Powers:</strong> {character?.powers || 'Not Available'}
+                             </Card.Text>
+                         </Card.Body>
+                     </Card>
+                 </Col>
+             </Row>
+         </Container>
+            )}
+</Container>
     );
 }
 
 export default Character;
+
+
+
