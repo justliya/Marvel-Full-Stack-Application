@@ -13,7 +13,7 @@ mysql-connector-python-rf==2.2.2
 packaging==24.1
 Werkzeug==3.0.3
 
-
+Backend: Dependencies
 
 python3 -m venv venv
 

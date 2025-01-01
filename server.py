@@ -6,6 +6,7 @@ from marshmallow import fields, ValidationError
 from flask_cors import CORS
 
 
+
 # Flask application setup
 app = Flask(__name__)
 ma = Marshmallow(app)
@@ -13,7 +14,7 @@ CORS(app)
 
 # Define the Character schema
 class CharacterSchema(ma.Schema):
-    id = fields.String(required=False)
+    id = fields.Integer(required=False)
     name = fields.String(required=True)
     alias = fields.String(required=True)
     alignment = fields.String(required=True)
@@ -150,8 +151,8 @@ def add_character():
             cursor.close()
             conn.close()
 
-@app.route('/characters/<int:id>', methods=['PUT'])
-def update_character(id):
+@app.route('/characters/<name>', methods=['PUT'])
+def update_character(name):
     try:
         # Validate and deserialize using Marshmallow input data sent by the client
         character_data = character_schema.load(request.json)
@@ -160,52 +161,66 @@ def update_character(id):
         return jsonify(e.messages), 400
 
     try:
+        # Establish database connection
         conn = get_db_connection()
         if conn is None:
             return jsonify({"error": "Database connection failed"}), 500
         cursor = conn.cursor()
 
         # Updated character details
-        updated_character = (character_data['name'], character_data['alias'], character_data['alignment'], character_data['powers'], character_data['image_url'], id)
+        updated_character = (
+            character_data['name'],
+            character_data['alias'],
+            character_data['alignment'],
+            character_data['powers'],
+            character_data['image_url'],
+            name
+        )
 
         # SQL query to update the character's details
-        query = "UPDATE characters SET name = %s, alias = %s, alignment = %s, powers = %s, image_url = %s WHERE id = %s"
+        query = """
+            UPDATE characters 
+            SET name = %s, alias = %s, alignment = %s, powers = %s, image_url = %s 
+            WHERE name = %s
+        """
 
-        # Executing the query
+        # Execute the query
         cursor.execute(query, updated_character)
         conn.commit()
 
-        # Successful update of the new character
-        return jsonify({"message": "Character details updated successfully"}), 200
+        # Check if the data actually changed
+        if cursor.rowcount > 0:  # If a row was updated
+            return jsonify({"message": "Character details updated successfully"}), 200
+        else:  # No changes detected
+            return jsonify({"message": "No changes detected, character remains the same"}), 200
 
     except Error as e:
         print(f"Error: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
 
     finally:
-        # Closing the database connection
+        # Close database connection
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
 
-
-@app.route('/characters/<int:id>', methods=['DELETE'])
-def delete_character(id):
+@app.route('/characters/<name>', methods=['DELETE'])
+def delete_character(name):
     try:
         conn = get_db_connection()
         if conn is None:
             return jsonify({"error": "Database connection failed"}), 500
         cursor = conn.cursor()
-        character_to_remove = (id, )
+        character_to_remove = (name, )
 
         # Check if the character exists in the database
-        cursor.execute("SELECT * FROM characters WHERE id = %s", character_to_remove)
+        cursor.execute("SELECT * FROM characters WHERE name = %s", character_to_remove)
         character = cursor.fetchone()
         if not character:
             return jsonify({"error": "Character not found"}), 404
 
         # If character exists, proceed to delete
-        query = "DELETE FROM characters WHERE id = %s"
+        query = "DELETE FROM characters WHERE name = %s"
         cursor.execute(query, character_to_remove)
         conn.commit()
 
