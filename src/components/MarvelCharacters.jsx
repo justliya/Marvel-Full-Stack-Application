@@ -71,7 +71,7 @@ function MarvelCharacters() {
                             />
                             <div className="carousel-overlay">
                                 <h3>{collector.name}</h3>
-                                <p>{collector.name}</p>
+                                <p>{collector.alias}</p>
                             </div>
                         </div>
                     </Carousel.Item>
